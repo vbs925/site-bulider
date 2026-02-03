@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { Project } from '../types'
-import { ArrowBigDownDashIcon, EyeIcon, EyeOffIcon, FullscreenIcon, LaptopIcon, Loader2Icon, MessageSquareIcon, SaveIcon, Smartphone, TabletIcon, XIcon } from 'lucide-react'
-import { dummyProjects, dummyConversations } from '../assets/assets'
+import { ArrowBigDownDashIcon, EyeIcon, EyeOffIcon, FullscreenIcon, LaptopIcon, Loader2Icon, Menu, MessageSquareIcon, SaveIcon, Smartphone, TabletIcon, XIcon } from 'lucide-react'
+import { dummyProjects, dummyConversations, dummyVersion } from '../assets/assets'
+import Sidebar from '../components/Sidebar'
+import ProjectPreview, { type ProjectPreviewRef } from '../components/ProjectPreview'
 
 const Projects = () => {
     const { projectId } = useParams()
@@ -17,11 +19,13 @@ const Projects = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
 
+    const previewRef = useRef<ProjectPreviewRef>(null)
+
     const fetchProject = async () => {
         const project = dummyProjects.find(project => project.id === projectId)
         setTimeout(() => {
             if (project) {
-                setProject({ ...project, conversation: dummyConversations })
+                setProject({ ...project, conversation: dummyConversations, versions: dummyVersion })
                 setLoading(false)
                 setIsGenerating(project.current_code ? false : true)
             } else {
@@ -63,6 +67,11 @@ const Projects = () => {
             <div className='flex max-sm:flex-col sm:items-center gap-4 px-4 py-2 no-scrollbar border-b border-gray-700'>
                 {/*left*/}
                 <div className='flex items-center gap-2 text-nowrap'>
+                    <button className='sm:hidden' onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        {!isMenuOpen ?
+                            <Menu className='size-6' /> : <XIcon className='size-6' />
+                        }
+                    </button>
                     <img src='/favicon.svg' alt="logo" className='h-6 cursor-pointer' onClick={() => navigate('/')} />
                     <div className='max-w-64 sm:max-w-xs'>
                         <p className='text-sm font-medium capitalize truncate'>{project.name}</p>
@@ -88,11 +97,11 @@ const Projects = () => {
                     hover:border-gray-500 transition-colors' >
                         <FullscreenIcon size={16} /> Preview
                     </Link>
-                    <button onClick={downloadCode} className='bg-linear-to-br from-blue-700 to blue-600 hover:from-blue-600 hover:to-blue-500 text-white px-3.5 py-1 
+                    <button onClick={downloadCode} className='bg-gradient-to-br from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white px-3.5 py-1 
                     flex flex-col items-center gap-1 rounded sm:rounded-sm transition-colors'>
                         <ArrowBigDownDashIcon size={16} /> Download
                     </button>
-                    <button onClick={togglePublish} className='bg-linear-to-br from-indigo-700 to-indigo-600 hover:from-indigo-600 hover:to-indigo-500 text-white px-3.5 py-1 
+                    <button onClick={togglePublish} className='bg-gradient-to-br from-indigo-700 to-indigo-600 hover:from-indigo-600 hover:to-indigo-500 text-white px-3.5 py-1 
                     flex flex-col items-center gap-1 rounded sm:rounded-sm transition-colors'>
                         {project.isPublished ?
                             <EyeOffIcon size={16} /> : <EyeIcon size={16} />
@@ -103,9 +112,16 @@ const Projects = () => {
                 </div>
             </div>
             <div className='flex-1 flex overflow-auto'>
-                <div>Sidebar</div>
+                <Sidebar isMenuOpen={isMenuOpen} project={project} setProject={(p) => setProject(p)}
+                    isGenerating={isGenerating} setIsGenerating={setIsGenerating} />
                 <div className='flex-1 p-2 pl-0'>
-                    project preview
+                    <ProjectPreview
+                        ref={previewRef}
+                        project={project}
+                        isGenerating={isGenerating}
+                        device={device}
+                        showEditorPanel={true}
+                    />
                 </div>
 
             </div>
