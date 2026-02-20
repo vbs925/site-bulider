@@ -15,19 +15,19 @@ export const auth = betterAuth({
   trustedOrigins,
   baseURL: process.env.BETTER_AUTH_URL!,
   secret: process.env.BETTER_AUTH_SECRET!,
-  advanced:{
-    cookies:{
-      session_tokens:{
-        name : 'auth_session',
-        attributes:{
-          httpOnly:true,
-          secure:process.env.NODE_ENV === 'production',
-          sameSite:'none',
-          path:'/'
+  advanced: {
+    cookies: {
+      session_tokens: {
+        name: 'auth_session',
+        attributes: {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          path: '/'
         }
-  
+
+      }
     }
   }
-}
 
 });

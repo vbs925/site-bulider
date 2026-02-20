@@ -10,6 +10,7 @@ import Community from './pages/Community'
 import Navbar from './components/Navbar'
 import { useLocation } from 'react-router-dom'
 import { Toaster } from "sonner"
+import AuthPage from './pages/auth/AuthPage'
 
 const App = () => {
 
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/preview/:projectId/:versionId" element={<Preview />} />
         <Route path="/community" element={<Community />} />
         <Route path="/view/:projectId" element={<View />} />
+        <Route path="/auth/:pathname" element={<AuthPage />} />
       </Routes>
 
 
