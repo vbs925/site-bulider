@@ -9,6 +9,7 @@ import View from './pages/View'
 import Community from './pages/Community'
 import Navbar from './components/Navbar'
 import { useLocation } from 'react-router-dom'
+import { Toaster } from "sonner"
 
 const App = () => {
 
@@ -20,6 +21,7 @@ const App = () => {
 
   return (
     <div>
+      <Toaster />
       {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
