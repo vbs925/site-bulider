@@ -11,6 +11,7 @@ import Navbar from './components/Navbar'
 import { useLocation } from 'react-router-dom'
 import { Toaster } from "sonner"
 import AuthPage from './pages/auth/AuthPage'
+import Settings from './pages/Settings'
 
 const App = () => {
 
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/community" element={<Community />} />
         <Route path="/view/:projectId" element={<View />} />
         <Route path="/auth/:pathname" element={<AuthPage />} />
+        <Route path="/account/settings" element={<Settings />} />
       </Routes>
 
 
